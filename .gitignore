@@ -1,0 +1,38 @@
+# Media files — not managed in this repo
+*.mp4
+*.mp3
+*.wav
+*.aac
+*.flac
+*.m4a
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# Render / export outputs
+/audio/
+/video/
+/thumbnails/
+/exports/
+/render/
+
+# API credentials
+*.json
+*.pickle
+client_secret*
+*_token*
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# macOS
+.DS_Store
