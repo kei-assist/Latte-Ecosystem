@@ -25,10 +25,14 @@ Latte BGM - make_video_from_image.py  v2.0
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+# リポジトリルートからの相対パス表示用
+_REPO_ROOT = Path(__file__).parent.parent.parent.resolve()
 
 # ─────────────────────────────────────────────────────────────────
 #  PRESET 定義
@@ -199,13 +203,33 @@ OUT_W, OUT_H = 1920, 1080
 #  エラーメッセージ
 # ─────────────────────────────────────────────────────────────────
 
-def check_file(path: str, role: str, hint_dir: str = "") -> None:
-    """ファイル存在確認。なければ分かりやすいメッセージを出して終了"""
-    if not os.path.isfile(path):
-        print(f"\n[ERROR] {role}ファイルが見つかりません")
-        print(f"  パス: {path}")
-        if hint_dir:
-            print(f"  ヒント: {hint_dir} に {role}を置いてください")
+def check_file(path: str, role: str, hint_dir: str = "") -> bool:
+    """
+    ファイル存在確認。
+    Returns True if file exists, False if not.
+    exit_on_fail=True の場合は見つからなければ終了。
+    """
+    if os.path.isfile(path):
+        return True
+
+    # 絶対パスを相対パスに変換して読みやすく表示
+    try:
+        rel = Path(path).resolve().relative_to(_REPO_ROOT)
+        display_path = str(rel)
+    except ValueError:
+        display_path = path
+
+    print()
+    print(f"  ❌  {role}が見つかりません")
+    print(f"      置く場所: {display_path}")
+    if hint_dir:
+        print(f"      フォルダ : {hint_dir}")
+    return False
+
+
+def check_file_or_exit(path: str, role: str, hint_dir: str = "") -> None:
+    """ファイルが存在しなければエラーを出して終了"""
+    if not check_file(path, role, hint_dir):
         print()
         sys.exit(1)
 
@@ -320,6 +344,129 @@ def build_vf(preset: dict, duration: int, w=OUT_W, h=OUT_H) -> str:
 #  メイン動画生成
 # ─────────────────────────────────────────────────────────────────
 
+def dry_run_check(
+    image_path: str,
+    audio_path: str,
+    output_path: str,
+    preset_name: str,
+    duration: int,
+    title: str,
+) -> None:
+    """--dry-run: ファイル確認・設定表示のみ（動画は生成しない）"""
+    preset = PRESETS.get(preset_name, {})
+    category = preset.get("category", "unknown")
+
+    print()
+    print("╔══════════════════════════════════════════════════════╗")
+    print("║          Latte BGM  dry-run チェック                 ║")
+    print("╚══════════════════════════════════════════════════════╝")
+    print()
+
+    # ── ファイル確認 ──────────────────────────────────────────────
+    img_ok  = check_file(image_path, "画像",
+                         f"assets/latte_bgm/images/source/{category}/")
+    audio_ok = check_file(audio_path, "音源",
+                          "assets/latte_bgm/audio/source/")
+    print()
+
+    if img_ok:
+        img_size = os.path.getsize(image_path) / 1024
+        print(f"  ✅  画像: {image_path}  ({img_size:.0f} KB)")
+    if audio_ok:
+        dur = get_audio_duration(audio_path)
+        print(f"  ✅  音源: {audio_path}  ({dur:.0f}秒)")
+
+    print()
+    print("─── 生成パラメータ ─────────────────────────────────────")
+    print(f"  Preset   : {preset_name}")
+    print(f"  演出     : {preset.get('description','')}")
+    print(f"  長さ     : {duration // 60}分 ({duration}秒)")
+    print(f"  出力先   : {output_path}")
+    if title:
+        print(f"  タイトル : {title}")
+
+    if preset:
+        vf = build_vf(preset, duration)
+        print(f"\n─── ffmpeg フィルタ（先頭100文字）─────────────────────")
+        print(f"  {vf[:100]}...")
+
+    print()
+    all_ok = img_ok and audio_ok
+    if all_ok:
+        print("  ✅  準備完了！以下のコマンドで動画を生成できます")
+        print()
+        print("     python3 make_video_from_image.py \\")
+        print(f"       --image  {image_path} \\")
+        print(f"       --audio  {audio_path} \\")
+        print(f"       --preset {preset_name} \\")
+        print(f"       --duration {duration} \\")
+        if title:
+            print(f'       --title  "{title}" \\')
+        print(f"       --output {output_path}")
+    else:
+        print("  ❌  不足ファイルがあります。上記のパスにファイルを置いてから再実行してください。")
+
+    print()
+
+
+def test_render(
+    image_path: str,
+    audio_path: str,
+    preset_name: str,
+    test_sec: int = 10,
+) -> None:
+    """
+    --test-render: 10秒のテスト動画を生成してパイプライン動作を確認する。
+    実際のファイル（画像・音源）が必要。
+    """
+    preset = PRESETS.get(preset_name)
+    if preset is None:
+        print(f"[ERROR] 未知の preset: {preset_name}")
+        sys.exit(1)
+
+    check_file_or_exit(image_path, "画像",
+                       f"assets/latte_bgm/images/source/{preset['category']}/")
+    check_file_or_exit(audio_path, "音源", "assets/latte_bgm/audio/source/")
+
+    out_path = f"/tmp/latte_bgm_test_{preset_name}_{test_sec}sec.mp4"
+
+    print()
+    print(f"[TEST RENDER] {test_sec}秒テスト動画を生成します...")
+    print(f"  Preset: {preset_name}")
+    print(f"  出力  : {out_path}")
+    print()
+
+    vf = build_vf(preset, test_sec)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        looped = os.path.join(tmpdir, "loop.aac")
+        final_audio = loop_audio(audio_path, test_sec, looped)
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-loop", "1", "-i", image_path,
+            "-i", final_audio,
+            "-vf", vf,
+            "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+            "-c:a", "aac", "-b:a", "128k",
+            "-r", "30", "-t", str(test_sec),
+            "-movflags", "+faststart",
+            out_path,
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print(f"[ERROR] テストレンダリング失敗:\n{result.stderr[-400:]}")
+        sys.exit(1)
+
+    size_kb = os.path.getsize(out_path) / 1024
+    print(f"  ✅  テスト完了! {size_kb:.0f} KB")
+    print(f"  再生して確認: open {out_path}")
+    print()
+    print("  ← 映像・音声が正常なら 60分版を生成できます")
+    print()
+
+
 def make_video(
     image_path: str,
     audio_path: str,
@@ -328,7 +475,7 @@ def make_video(
     duration: int = 3600,
     title: str = "",
     crf: int = 20,
-    preset_override: int = "slow",
+    preset_override: str = "slow",
 ) -> None:
     preset = PRESETS.get(preset_name)
     if preset is None:
@@ -337,11 +484,11 @@ def make_video(
         sys.exit(1)
 
     # ファイル確認
-    check_file(
+    check_file_or_exit(
         image_path, "画像",
         f"assets/latte_bgm/images/source/{preset['category']}/",
     )
-    check_file(
+    check_file_or_exit(
         audio_path, "音源",
         "assets/latte_bgm/audio/source/",
     )
@@ -444,7 +591,13 @@ def main() -> None:
         choices=["ultrafast","fast","medium","slow","veryslow"],
         help="エンコード速度 (drafts→fast, final→slow)")
     parser.add_argument("--list-presets", action="store_true",
-        help="利用可能なプリセット一覧を表示")
+        help="利用可能なプリセット一覧を表示して終了")
+    parser.add_argument("--dry-run", "-n", action="store_true",
+        help="ファイル確認・設定表示のみ。動画は生成しない（事前チェック用）")
+    parser.add_argument("--test-render", action="store_true",
+        help="10秒のテスト動画を生成してffmpegパイプラインを確認する")
+    parser.add_argument("--test-sec", type=int, default=10,
+        help="--test-render の動画の長さ（秒）[デフォルト: 10]")
     # 後方互換: 旧 positional args
     parser.add_argument("pos_image", nargs="?", help=argparse.SUPPRESS)
     parser.add_argument("pos_audio", nargs="?", help=argparse.SUPPRESS)
@@ -462,12 +615,15 @@ def main() -> None:
     audio = args.audio or args.pos_audio
 
     if not image or not audio:
-        parser.error("--image と --audio を指定してください\n  例: --image path/to/image.png --audio path/to/audio.mp3")
+        parser.error(
+            "--image と --audio を指定してください\n"
+            "  例: --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png\n"
+            "       --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3"
+        )
 
     # preset の解決
     preset_name = args.preset or args.category
     if not preset_name:
-        # 画像パスからカテゴリを推測
         for cat in PRESETS:
             if cat in image.lower():
                 preset_name = cat
@@ -483,6 +639,29 @@ def main() -> None:
             f"../../assets/latte_bgm/videos/drafts/{stem}_{args.duration//60}min.mp4"
         )
 
+    # ── dry-run モード ────────────────────────────────────────────
+    if args.dry_run:
+        dry_run_check(
+            image_path=image,
+            audio_path=audio,
+            output_path=args.output,
+            preset_name=preset_name,
+            duration=args.duration,
+            title=args.title,
+        )
+        return
+
+    # ── test-render モード ────────────────────────────────────────
+    if args.test_render:
+        test_render(
+            image_path=image,
+            audio_path=audio,
+            preset_name=preset_name,
+            test_sec=args.test_sec,
+        )
+        return
+
+    # ── 通常生成 ─────────────────────────────────────────────────
     make_video(
         image_path=image,
         audio_path=audio,

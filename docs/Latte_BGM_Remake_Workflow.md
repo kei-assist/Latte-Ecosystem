@@ -5,6 +5,20 @@
 
 ---
 
+## ⚡ 次に人間がやること（3ステップ）
+
+```
+1. ChatGPTで作った画像を指定フォルダに置く
+   → assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png
+
+2. Sunoで作った音源を指定フォルダに置く
+   → assets/latte_bgm/audio/source/workout_boxercise_001.mp3
+
+3. コマンドを実行してMP4を作る（下記「Workout動画の作り方」参照）
+```
+
+---
+
 ## これは何のためのドキュメントか
 
 ChatGPT（アーク）が生成した高品質画像と Suno の音源を使って、
@@ -33,6 +47,60 @@ Latte BGM の動画を「静止画っぽい動画」から「YouTubeで見ても
         ↓
 8. 既存動画を差し替え or 新規公開
 ```
+
+---
+
+## 事前チェック（dry-run）
+
+**実際に動画を生成する前に、ファイルが正しい場所にあるか確認できます。**
+
+```bash
+cd scripts/latte_bgm
+
+# dry-run: ファイル確認 + 設定表示のみ（動画は生成しない）
+python3 make_video_from_image.py \
+  --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
+  --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
+  --preset workout_boxercise \
+  --duration 3600 \
+  --title "1 Hour Boxercise Workout Music 2026 | Female Fitness Motivation BGM | Latte BGM" \
+  --output ../../assets/latte_bgm/videos/drafts/workout_boxercise_60min_001.mp4 \
+  --dry-run
+```
+
+**ファイルがない場合の表示:**
+```
+  ❌  画像が見つかりません
+      置く場所: assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png
+      フォルダ : assets/latte_bgm/images/source/workout/
+```
+
+**ファイルが揃った場合の表示:**
+```
+  ✅  画像: ...workout_boxercise_female_001.png  (3100 KB)
+  ✅  音源: ...workout_boxercise_001.mp3  (180秒)
+  ✅  準備完了！以下のコマンドで動画を生成できます
+```
+
+---
+
+## パイプライン動作テスト（test-render）
+
+**初めて使う前に、10秒のテスト動画を作ってffmpegが正常に動くか確認できます。**
+
+```bash
+# 10秒テスト動画を生成（/tmp/ に保存）
+python3 make_video_from_image.py \
+  --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
+  --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
+  --preset workout_boxercise \
+  --test-render
+
+# 生成後は自動で open コマンドが表示されます
+# → open /tmp/latte_bgm_test_workout_boxercise_10sec.mp4
+```
+
+映像・音声が正常なら、60分版の生成に進めます。
 
 ---
 
