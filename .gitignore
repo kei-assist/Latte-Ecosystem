@@ -20,6 +20,22 @@
 /exports/
 /render/
 
+# assets/ 内のメディアファイル（フォルダ構成は管理、中身は除外）
+assets/latte_bgm/images/source/**/*.png
+assets/latte_bgm/images/source/**/*.jpg
+assets/latte_bgm/images/source/**/*.jpeg
+assets/latte_bgm/images/thumbnails/**/*.png
+assets/latte_bgm/images/thumbnails/**/*.jpg
+assets/latte_bgm/images/backgrounds/**/*.png
+assets/latte_bgm/images/backgrounds/**/*.jpg
+assets/latte_bgm/audio/source/*.mp3
+assets/latte_bgm/audio/source/*.wav
+assets/latte_bgm/audio/looped/*.mp3
+assets/latte_bgm/audio/looped/*.aac
+assets/latte_bgm/videos/drafts/*.mp4
+assets/latte_bgm/videos/final/*.mp4
+# .gitkeep と .txt / .md はGit管理する（除外しない）
+
 # API credentials
 *.json
 *.pickle
