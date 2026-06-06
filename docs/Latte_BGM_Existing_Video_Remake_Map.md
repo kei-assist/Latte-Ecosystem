@@ -1,106 +1,105 @@
-# Latte BGM 既存動画 作り直し対応表
+# Latte BGM 既存動画 作り直し対応表 v2
 
 参照元: `Kei_Life_OS_v2.md`
-作成日: 2026-06-06
+更新日: 2026-06-06
+
+> ★ 既存動画タイトルは YouTube Studio で確認して修正してください。
+> 現在は参考タイトル（仮）を記載しています。
 
 ---
 
 ## 方針
 
-| 方針 | 判断基準 |
-|------|---------|
-| **A: 動画ごと作り直し** | 静止画のみ・ビジュアル低品質・カテゴリ不一致 |
-| **B: サムネのみ差し替え** | 動画本体は許容範囲・サムネだけ改善 |
-| **C: 新規追加** | 既存なし・新カテゴリ（Workoutなど） |
+| 記号 | 意味 |
+|------|------|
+| **A** | 今すぐ着手（新規作成 or 完全リメイク） |
+| **B** | 近期対応（動画本体を作り直し） |
+| **C** | 後回し（サムネのみ差し替えで十分） |
+| ✅ | 完了 |
+| ⬜ | 未着手 |
 
 ---
 
-## 優先度A：Workout（新規追加）
+## 優先度 A ①：Workout 系（新規作成）
 
-既存のWorkout系動画はほぼない。ChatGPT画像で新規制作。
+> 既存のWorkout系動画はほぼない。ChatGPT画像 × 新音源で完全新規制作。
 
-| # | 新動画タイトル案 | 使用画像ファイル名 | 動画ファイル名 | 優先度 | 状態 |
-|---|-------------|--------------|-----------|-------|------|
-| 1 | 1 Hour Boxercise Workout Music 2026 \| Female Fitness Motivation BGM \| Latte BGM | workout_boxercise_female_001.png | workout_boxercise_60min_001.mp4 | 🔥最高 | ⬜ |
-| 2 | 1 Hour Beast Mode Gym Music \| Male Powerlifting Motivation \| Latte BGM | workout_beast_mode_male_001.png | workout_beast_mode_60min_001.mp4 | 🔥最高 | ⬜ |
-| 3 | 1 Hour Running Music 2026 \| Female Morning Run Motivation \| Latte BGM | workout_running_female_001.png | workout_running_60min_001.mp4 | 🔥最高 | ⬜ |
-| 4 | 1 Hour Circuit Training Music \| Female HIIT Workout BGM \| Latte BGM | workout_circuit_female_001.png | workout_circuit_60min_001.mp4 | 高 | ⬜ |
-| 5 | 1 Hour Gym Motivation Music \| Male Iron Will Training BGM \| Latte BGM | workout_gym_motivation_male_001.png | workout_gym_motivation_60min_001.mp4 | 高 | ⬜ |
+| # | workout_subtype | 新動画タイトル案 | 使用画像ファイル名 | 出力動画ファイル名 | Preset | 状態 |
+|---|---------------|-------------|--------------|--------------|--------|------|
+| 1 | boxercise | 1 Hour Boxercise Workout Music 2026 \| Female Fitness Motivation BGM \| Latte BGM | workout_boxercise_female_001.png | workout_boxercise_60min_001.mp4 | `workout_boxercise` | ⬜ |
+| 2 | beast_mode | 1 Hour Beast Mode Gym Music \| Male Powerlifting Motivation BGM \| Latte BGM | workout_beast_mode_male_001.png | workout_beast_mode_60min_001.mp4 | `workout_beast_mode` | ⬜ |
+| 3 | running | 1 Hour Running Music 2026 \| Female Morning Run Cardio BGM \| Latte BGM | workout_running_female_001.png | workout_running_60min_001.mp4 | `workout_running` | ⬜ |
+| 4 | hiit_circuit | 1 Hour HIIT Circuit Training Music \| High Intensity Workout BGM \| Latte BGM | workout_hiit_circuit_female_001.png | workout_hiit_circuit_60min_001.mp4 | `workout_hiit_circuit` | ⬜ |
+| 5 | gym_motivation | 1 Hour Gym Motivation Music \| Pre-Workout Focus BGM \| Latte BGM | workout_gym_motivation_male_001.png | workout_gym_motivation_60min_001.mp4 | `workout_gym_motivation` | ⬜ |
 
----
+### workout_subtype 別 画像・演出ルール
 
-## 優先度B：Deep Focus / Study（既存動画を作り直し）
-
-| # | 既存動画タイトル | 現在のビジュアル | 改善優先度 | 使用する新画像 | 作り直し後タイトル案 | サムネのみ | 動画作り直し | メモ |
-|---|-------------|------------|---------|----------|----------------|----------|-----------|------|
-| 1 | Deep Focus Vol.1 | 静止画（低品質） | 🔥最高 | study_deep_focus_female_001.png | Deep Focus Vol.1 \| 1 Hour Study Music \| Latte BGM | ✗ | ✓ | 最初のvol・完全リメイク優先 |
-| 2 | Deep Focus Vol.2 | 静止画 | 高 | study_deep_focus_male_001.png | Deep Focus Vol.2 \| 1 Hour Study BGM \| Latte BGM | ✗ | ✓ | |
-| 3 | Deep Focus Vol.3 | 静止画 | 高 | study_coding_male_001.png | Deep Focus Vol.3 \| 1 Hour Coding Music \| Latte BGM | △ | △ | URL: https://www.youtube.com/watch?v=o0K1O9LKwzk |
-| 4 | Deep Focus Vol.4 | 静止画 | 中 | study_desk_lamp_no_person_001.png | Deep Focus Vol.4 \| 1 Hour Desk BGM \| Latte BGM | ✓ | ✗ | URL: https://www.youtube.com/watch?v=znh0YZVbIKU |
-
----
-
-## 優先度C：Nature / Forest / Rain / Sleep（既存動画を改善）
-
-| # | 既存動画タイトル | 改善優先度 | 使用する新画像 | 作り直し後タイトル案 | サムネのみ | 動画作り直し | メモ |
-|---|-------------|---------|----------|----------------|----------|-----------|------|
-| 1 | Rainy Night Vol.1 | 中 | sleep_rainy_night_male_001.png | Rainy Night Vol.1 \| 1 Hour Sleep Music \| Latte BGM | ✓ | ✗ | サムネ差し替えで十分 |
-| 2 | Rainy Night Vol.2 | 中 | sleep_rainy_night_male_001.png | Rainy Night Vol.2 \| 1 Hour Rain Sleep Music \| Latte BGM | ✓ | ✗ | |
-| 3 | Deep Sleep Vol.1 | 中 | sleep_deep_sleep_no_person_001.png | Deep Sleep Vol.1 \| 1 Hour Deep Sleep Music \| Latte BGM | ✓ | ✗ | |
-| 4 | Forest Calm Vol.1 | 低 | nature_forest_rain_no_person_001.png | Forest Calm Vol.1 \| 1 Hour Nature BGM \| Latte BGM | ✓ | ✗ | |
-| 5 | Forest Calm Vol.2 | 低 | nature_forest_rain_no_person_001.png | Forest Calm Vol.2 \| 1 Hour Forest Relaxation \| Latte BGM | ✓ | ✗ | URL: https://www.youtube.com/watch?v=amvWiPceIVY |
-| 6 | Forest Calm Vol.3 | 低 | nature_forest_rain_no_person_001.png | Forest Calm Vol.3 \| 1 Hour Nature Sleep \| Latte BGM | ✓ | ✗ | |
-| 7 | Japanese Garden Vol.1 | 低 | nature_japanese_garden_no_person_001.png | Japanese Garden Vol.1 \| 1 Hour Zen BGM \| Latte BGM | ✓ | ✗ | |
-| 8 | Japanese Garden Vol.2 | 低 | nature_japanese_garden_no_person_001.png | Japanese Garden Vol.2 \| 1 Hour Meditation BGM \| Latte BGM | ✓ | ✗ | |
-| 9 | Cozy Cafe Vol.1 | 低 | cafe_cozy_cafe_male_001.png | Cozy Cafe Vol.1 \| 1 Hour Cafe BGM \| Latte BGM | ✓ | ✗ | |
-| 10 | Cozy Cafe Vol.2 | 低 | cafe_cozy_cafe_male_001.png | Cozy Cafe Vol.2 \| 1 Hour Lo-Fi Cafe Music \| Latte BGM | ✓ | ✗ | URL: https://www.youtube.com/watch?v=iL4C19P6WEc |
-| 11 | Reading Room Vol.1 | 低 | study_library_female_001.png | Reading Room Vol.1 \| 1 Hour Reading BGM \| Latte BGM | ✓ | ✗ | |
-| 12 | Reading Room Vol.2 | 低 | study_library_female_001.png | Reading Room Vol.2 \| 1 Hour Study Music \| Latte BGM | ✓ | ✗ | |
-| 13 | Morning Piano Vol.1 | 低 | relax_morning_sunrise_no_person_001.png | Morning Piano Vol.1 \| 1 Hour Morning BGM \| Latte BGM | ✓ | ✗ | |
-| 14 | Morning Piano Vol.2 | 低 | relax_morning_sunrise_no_person_001.png | Morning Piano Vol.2 \| 1 Hour Gentle Morning Music \| Latte BGM | ✓ | ✗ | URL: https://www.youtube.com/watch?v=6xdItyJZPuE |
+| subtype | 画像の内容 | 色調 | 演出 |
+|---------|---------|------|------|
+| beast_mode | 男性アスリート・ダンベル/バーベル・高級ジム | 黒×金 | 強ズーム + 高コントラスト |
+| boxercise | 女性アスリート・ボクシンググローブ・サンドバッグ | 黒×金 | やや強ズーム + 横移動 |
+| running | 女性ランナー・朝焼け・屋外 | 明るめ・オレンジ | 前進感の横ドリフト |
+| hiit_circuit | ジム全体・複数種目感・強い光 | 明るめ・強コントラスト | テンポ感のあるズーム |
+| gym_motivation | ヘッドホン・ロッカー・集中感 | ダーク・落ち着いた | ゆっくりズーム |
 
 ---
 
-## 必要画像 まとめ（揃えるべき素材リスト）
+## 優先度 A ②：Sleep 系（既存リメイク + 新規）
 
-### 今すぐ必要（優先度A・B）
+> 既存動画の静止画ビジュアルを高品質画像に置き換える。
 
-| 画像ファイル名 | カテゴリ | 用途 |
-|-------------|---------|------|
-| workout_boxercise_female_001.png | workout | 新規Vol.1 ★最優先 |
-| workout_beast_mode_male_001.png | workout | 新規Vol.2 |
-| workout_running_female_001.png | workout | 新規Vol.3 |
-| workout_circuit_female_001.png | workout | 新規Vol.4 |
-| workout_gym_motivation_male_001.png | workout | 新規Vol.5 |
-| study_deep_focus_female_001.png | study | Deep Focus Vol.1リメイク |
-| study_deep_focus_male_001.png | study | Deep Focus Vol.2リメイク |
-| study_coding_male_001.png | study | Deep Focus Vol.3改善 |
-| study_desk_lamp_no_person_001.png | study | サムネ差し替え |
-
-### 後回しでOK（優先度C）
-
-| 画像ファイル名 | カテゴリ | 用途 |
-|-------------|---------|------|
-| sleep_rainy_night_male_001.png | sleep | Rainy Night サムネ差し替え |
-| sleep_deep_sleep_no_person_001.png | sleep | Deep Sleep サムネ差し替え |
-| nature_forest_rain_no_person_001.png | nature | Forest Calm サムネ差し替え |
-| nature_japanese_garden_no_person_001.png | nature | Japanese Garden サムネ差し替え |
-| cafe_cozy_cafe_male_001.png | cafe | Cozy Cafe サムネ差し替え |
-| study_library_female_001.png | study | Reading Room サムネ差し替え |
-| relax_morning_sunrise_no_person_001.png | relax | Morning Piano サムネ差し替え |
+| # | sleep_subtype | 既存動画タイトル（仮） | 作り直し後タイトル案 | 使用画像ファイル名 | Preset | サムネのみ | 動画作り直し | 状態 |
+|---|-------------|-----------------|----------------|--------------|--------|----------|------------|------|
+| 1 | rainy_night | Rainy Night Vol.1（仮） | Rainy Night Vol.1 \| 1 Hour Sleep Music \| Latte BGM | sleep_rainy_night_001.png | `sleep_rainy_night` | ✗ | ✓ | ⬜ |
+| 2 | rainy_night | Rainy Night Vol.2（仮） | Rainy Night Vol.2 \| 1 Hour Rain Sleep Music \| Latte BGM | sleep_rainy_night_002.png | `sleep_rainy_night` | ✗ | ✓ | ⬜ |
+| 3 | deep_sleep | Deep Sleep Vol.1（仮） | Deep Sleep Vol.1 \| 1 Hour Deep Sleep Music \| Latte BGM | sleep_deep_night_001.png | `sleep_deep_night` | ✗ | ✓ | ⬜ |
+| 4 | soft | Morning Piano Vol.1（仮） | Morning Piano Vol.1 \| 1 Hour Gentle Morning BGM \| Latte BGM | sleep_soft_morning_001.png | `sleep_soft` | ✓ | ✗ | ⬜ |
+| 5 | soft | Morning Piano Vol.2（仮） | Morning Piano Vol.2 \| 1 Hour Soft Wake Up Music \| Latte BGM | sleep_soft_morning_001.png | `sleep_soft` | ✓ | ✗ | ⬜ |
 
 ---
 
-## 作業チェックリスト
+## 優先度 B：Study / Focus 系（動画本体リメイク）
 
-### Boxercise動画（最初のテスト）
+| # | 既存動画タイトル（仮） | 作り直し後タイトル案 | 使用画像ファイル名 | Preset | サムネのみ | 動画作り直し | 状態 |
+|---|-----------------|----------------|--------------|--------|----------|------------|------|
+| 1 | Deep Focus Vol.1（仮） | Deep Focus Vol.1 \| 1 Hour Study Music \| Latte BGM | study_deep_focus_female_001.png | `study` | ✗ | ✓ | ⬜ |
+| 2 | Deep Focus Vol.2（仮） | Deep Focus Vol.2 \| 1 Hour Study BGM \| Latte BGM | study_deep_focus_male_001.png | `study` | ✗ | ✓ | ⬜ |
+| 3 | Deep Focus Vol.3 | Deep Focus Vol.3 \| 1 Hour Coding Music \| Latte BGM | study_coding_male_001.png | `study` | △ | △ | ⬜ |
+| 4 | Deep Focus Vol.4 | Deep Focus Vol.4 \| 1 Hour Desk BGM \| Latte BGM | study_desk_lamp_no_person_001.png | `study` | ✓ | ✗ | ⬜ |
 
-- [ ] ChatGPTで `workout_boxercise_female_001.png` を生成
-- [ ] `assets/latte_bgm/images/source/workout/` に保存
-- [ ] Sunoで音源生成・`assets/latte_bgm/audio/source/` に保存
-- [ ] `make_video_from_image.py --category workout` で動画生成
-- [ ] `videos/drafts/` で確認
-- [ ] OKなら `videos/final/` に移動
-- [ ] メタデータ確認（`metadata/`）
-- [ ] YouTubeアップロード
-- [ ] X / Instagram 告知
+---
+
+## 優先度 C：Nature / Cafe 系（サムネのみ差し替え）
+
+| # | 既存動画タイトル（仮） | サムネ差し替え用画像 | 状態 |
+|---|-----------------|----------------|------|
+| 1 | Forest Calm Vol.1〜3 | nature_forest_rain_no_person_001.png | ⬜ |
+| 2 | Japanese Garden Vol.1〜2 | nature_japanese_garden_no_person_001.png | ⬜ |
+| 3 | Cozy Cafe Vol.1〜2 | cafe_cozy_cafe_male_001.png | ⬜ |
+| 4 | Reading Room Vol.1〜2 | study_library_female_001.png | ⬜ |
+
+---
+
+## 必要画像 チェックリスト
+
+### 今すぐ揃える（優先 A）
+
+- [ ] `workout_boxercise_female_001.png` → `assets/latte_bgm/images/source/workout/`
+- [ ] `workout_beast_mode_male_001.png`
+- [ ] `workout_running_female_001.png`
+- [ ] `workout_hiit_circuit_female_001.png`
+- [ ] `workout_gym_motivation_male_001.png`
+- [ ] `sleep_rainy_night_001.png` → `assets/latte_bgm/images/source/sleep/`
+- [ ] `sleep_rainy_night_002.png`
+- [ ] `sleep_deep_night_001.png`
+- [ ] `sleep_soft_morning_001.png`
+
+### 音源チェックリスト
+
+- [ ] `workout_boxercise_001.mp3` → `assets/latte_bgm/audio/source/`
+- [ ] `workout_beast_mode_001.mp3`
+- [ ] `workout_running_001.mp3`
+- [ ] `workout_hiit_circuit_001.mp3`
+- [ ] `workout_gym_motivation_001.mp3`
+- [ ] `sleep_rainy_night_001.mp3`
+- [ ] `sleep_deep_night_001.mp3`
