@@ -42,156 +42,273 @@ _REPO_ROOT = Path(__file__).parent.parent.parent.resolve()
 #    saturation: 乗数 (1.0=変化なし、0.8=彩度下げ、1.2=上げ)
 #  zoom_end: 動画終了時のズーム倍率 (1.0=変化なし、1.2=20%ズームイン)
 #  pan_px_per_sec: 横方向のドリフト速度（ピクセル/秒）
-#  blur: ソフトフォーカス強度 (0=なし、1.0=弱め、2.0=強め)
-#  rain: True のとき geq で雨筋オーバーレイを追加
+#  blur          : ソフトフォーカス強度 (0=なし、0.6=弱め、1.2=強め)
+#  rain          : True → geq で雨筋オーバーレイ
+#  light_flicker : True → geq で光の揺らぎ（ランプ / スタジオ照明感）
+#  flicker_speed : 揺らぎの速さ (Hz)  0.5=ゆっくり / 2.0=速め
+#  flicker_amp   : 揺らぎの強さ (0.0-1.0)  0.03=微弱 / 0.08=強め
+#  camera_shake  : True → 微細な位置ゆらぎ（カメラ揺れ感）
+#  shake_px      : 揺れの最大ピクセル数
 # ─────────────────────────────────────────────────────────────────
 
 PRESETS: dict[str, dict] = {
 
     # ── Workout ─────────────────────────────────────────────────
     "workout_beast_mode": {
-        "category":      "workout",
-        "zoom_start":    1.00,
-        "zoom_end":      1.28,   # 強めのズーム
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.28,   # 強めのズーム
         "pan_px_per_sec": 0.28,
-        "brightness":    0.03,
-        "contrast":      1.18,
-        "saturation":    1.20,
-        "vignette":      True,
-        "blur":          0.0,
-        "rain":          False,
-        "description":   "強めのズーム + 高コントラスト + 力強い印象",
+        "brightness":     0.03,
+        "contrast":       1.18,
+        "saturation":     1.20,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # ジム照明の強いパルス感
+        "flicker_speed":  2.8,    # 速めの点滅感
+        "flicker_amp":    0.07,   # 強め
+        "camera_shake":   True,   # 力強いカメラ揺れ
+        "shake_px":       6,
+        "description":    "強めのズーム + 照明パルス + カメラ揺れ + 力強い印象",
     },
     "workout_boxercise": {
-        "category":      "workout",
-        "zoom_start":    1.00,
-        "zoom_end":      1.22,
-        "pan_px_per_sec": 0.50,  # 横移動でパンチの勢い感
-        "brightness":    0.05,
-        "contrast":      1.12,
-        "saturation":    1.15,
-        "vignette":      True,
-        "blur":          0.0,
-        "rain":          False,
-        "description":   "やや強めのズーム + 軽い横移動 + ジム照明感",
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.22,
+        "pan_px_per_sec": 0.50,
+        "brightness":     0.05,
+        "contrast":       1.12,
+        "saturation":     1.15,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # ジム照明の揺らぎ
+        "flicker_speed":  2.2,
+        "flicker_amp":    0.05,
+        "camera_shake":   True,   # パンチの勢い感
+        "shake_px":       4,
+        "description":    "やや強めのズーム + 横移動 + 照明揺らぎ + 軽いカメラ揺れ",
     },
     "workout_running": {
-        "category":      "workout",
-        "zoom_start":    1.00,
-        "zoom_end":      1.18,
-        "pan_px_per_sec": 0.80,  # 前進感の強い横ドリフト
-        "brightness":    0.08,   # 朝焼けの明るさ
-        "contrast":      1.06,
-        "saturation":    1.10,
-        "vignette":      True,
-        "blur":          0.0,
-        "rain":          False,
-        "description":   "前進感のある横移動 + 朝焼けの明るさ + 疾走感",
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.18,
+        "pan_px_per_sec": 0.80,
+        "brightness":     0.08,
+        "contrast":       1.06,
+        "saturation":     1.10,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # 太陽光の揺らぎ
+        "flicker_speed":  0.8,    # ゆっくりした朝の光変化
+        "flicker_amp":    0.04,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "前進感の横ドリフト + 朝の光揺らぎ + 疾走感",
     },
     "workout_hiit_circuit": {
-        "category":      "workout",
-        "zoom_start":    1.00,
-        "zoom_end":      1.20,
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.20,
         "pan_px_per_sec": 0.40,
-        "brightness":    0.04,
-        "contrast":      1.08,
-        "saturation":    1.12,
-        "vignette":      True,
-        "blur":          0.0,
-        "rain":          False,
-        "description":   "テンポ感のあるズーム + 高強度感",
+        "brightness":     0.04,
+        "contrast":       1.08,
+        "saturation":     1.12,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,
+        "flicker_speed":  3.2,    # 高強度・速めの光点滅
+        "flicker_amp":    0.06,
+        "camera_shake":   True,
+        "shake_px":       5,
+        "description":    "テンポ感のあるズーム + 光点滅 + 高強度感",
     },
     "workout_gym_motivation": {
-        "category":      "workout",
-        "zoom_start":    1.00,
-        "zoom_end":      1.12,
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.12,
         "pan_px_per_sec": 0.15,
-        "brightness":   -0.02,
-        "contrast":      1.05,
-        "saturation":    1.05,
-        "vignette":      True,
-        "blur":          0.0,
-        "rain":          False,
-        "description":   "ゆっくりズーム + 落ち着いた集中感 + 派手すぎない",
+        "brightness":    -0.02,
+        "contrast":       1.05,
+        "saturation":     1.05,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,
+        "flicker_speed":  1.2,    # 静かな照明の揺らぎ
+        "flicker_amp":    0.03,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "ゆっくりズーム + 静かな照明揺らぎ + 落ち着いた集中感",
     },
 
     # ── Sleep ───────────────────────────────────────────────────
     "sleep_soft": {
-        "category":      "sleep",
-        "zoom_start":    1.00,
-        "zoom_end":      1.06,   # 非常に遅いズーム
+        "category":       "sleep",
+        "zoom_start":     1.00,
+        "zoom_end":       1.06,
         "pan_px_per_sec": 0.025,
-        "brightness":   -0.18,
-        "contrast":      0.95,
-        "saturation":    0.80,
-        "vignette":      True,
-        "blur":          0.6,    # ソフトフォーカス（弱いグロー感）
-        "rain":          False,
-        "description":   "非常に遅いズーム + 低刺激 + ソフトフォーカス",
+        "brightness":    -0.18,
+        "contrast":       0.95,
+        "saturation":     0.80,
+        "vignette":       True,
+        "blur":           0.6,
+        "rain":           False,
+        "light_flicker":  True,   # 月明かりのやわらかい揺らぎ
+        "flicker_speed":  0.3,    # 非常にゆっくり
+        "flicker_amp":    0.02,   # 極めて微弱
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "非常に遅いズーム + 月明かりの微細な揺らぎ + 低刺激",
     },
     "sleep_rainy_night": {
-        "category":      "sleep",
-        "zoom_start":    1.00,
-        "zoom_end":      1.08,
-        "pan_px_per_sec": 0.04,
-        "brightness":   -0.22,   # 暗め（夜の雰囲気）
-        "contrast":      0.90,
-        "saturation":    0.72,   # 低彩度（青系にシフト）
-        "vignette":      True,
-        "blur":          0.9,    # 雨の夜のぼかし感
-        "rain":          True,   # 雨筋オーバーレイ有効
-        "description":   "雨筋エフェクト + ゆっくりズーム + 暗め + 青系",
+        "category":       "sleep",
+        "zoom_start":     1.00,
+        "zoom_end":       1.08,
+        "pan_px_per_sec": 0.05,   # わずかに強めのドリフトで雨の夜の揺れ感
+        "brightness":    -0.22,
+        "contrast":       0.90,
+        "saturation":     0.72,   # 青系にシフト（雨夜の色調）
+        "vignette":       True,
+        "blur":           1.2,    # 強めのソフトフォーカス（霧・雨の視界感）
+        "rain":           False,  # TODO: rain overlay は後で改良予定
+        "light_flicker":  True,   # 窓の外の明かりの揺らぎ
+        "flicker_speed":  0.5,
+        "flicker_amp":    0.025,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "ゆっくりズーム + 霧ぼかし(mist) + 青系 + 窓明かりの揺らぎ [rain: 改良予定]",
     },
     "sleep_deep_night": {
-        "category":      "sleep",
-        "zoom_start":    1.00,
-        "zoom_end":      1.04,   # 動きは最小限
+        "category":       "sleep",
+        "zoom_start":     1.00,
+        "zoom_end":       1.04,
         "pan_px_per_sec": 0.01,
-        "brightness":   -0.30,   # かなり暗め
-        "contrast":      0.88,
-        "saturation":    0.68,
-        "vignette":      True,
-        "blur":          1.2,    # 霧・ぼかし感
-        "rain":          False,
-        "description":   "動きは最小限 + 暗め + 霧ぼかし感 + 寝落ち用",
+        "brightness":    -0.30,
+        "contrast":       0.88,
+        "saturation":     0.68,
+        "vignette":       True,
+        "blur":           1.2,
+        "rain":           False,
+        "light_flicker":  False,  # 刺激ゼロ
+        "flicker_speed":  0.0,
+        "flicker_amp":    0.0,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "動きは最小限 + 霧ぼかし感 + 完全低刺激・寝落ち用",
     },
 
-    # ── 後方互換：旧 --category 名 ──────────────────────────────
+    # ── Nature ──────────────────────────────────────────────────
+    "nature_forest_rain": {
+        "category":       "nature",
+        "zoom_start":     1.00,
+        "zoom_end":       1.15,
+        "pan_px_per_sec": 0.18,
+        "brightness":    -0.05,
+        "contrast":       0.97,
+        "saturation":     1.08,   # 緑を少し強調
+        "vignette":       True,
+        "blur":           0.8,    # 強めのソフトフォーカス（霧・森の空気感）
+        "rain":           False,  # TODO: rain overlay は後で改良予定
+        "light_flicker":  True,   # 木漏れ日の揺らぎ
+        "flicker_speed":  0.7,
+        "flicker_amp":    0.03,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "ゆっくりズーム + 霧ぼかし(mist) + 緑強調 + 木漏れ日揺らぎ [rain: 改良予定]",
+    },
+
+    # ── Study ───────────────────────────────────────────────────
+    "study_focus": {
+        "category":       "study",
+        "zoom_start":     1.00,
+        "zoom_end":       1.12,
+        "pan_px_per_sec": 0.08,
+        "brightness":    -0.05,
+        "contrast":       1.00,
+        "saturation":     0.95,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # ランプの揺らぎ（炎のような揺れ）
+        "flicker_speed":  1.1,    # 緩やかな揺らぎ
+        "flicker_amp":    0.035,  # 控えめ
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "ゆっくりズーム + ランプ揺らぎ + 落ち着いた集中感",
+    },
+
+    # ── Cafe ────────────────────────────────────────────────────
+    "cafe_warm": {
+        "category":       "cafe",
+        "zoom_start":     1.00,
+        "zoom_end":       1.10,
+        "pan_px_per_sec": 0.12,
+        "brightness":     0.03,
+        "contrast":       1.00,
+        "saturation":     1.10,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # 暖炉・ランプの暖かい揺らぎ
+        "flicker_speed":  0.6,    # ゆっくり・カフェの落ち着き
+        "flicker_amp":    0.03,
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "暖色ライト揺らぎ + ゆっくりズーム + 落ち着いたカフェ感",
+    },
+
+    # ── 後方互換：旧 --category 名 / --preset 省略時 ────────────
     "workout": {
         "category": "workout", "zoom_start": 1.00, "zoom_end": 1.18,
         "pan_px_per_sec": 0.30, "brightness": 0.02, "contrast": 1.10,
         "saturation": 1.10, "vignette": True, "blur": 0.0, "rain": False,
-        "description": "標準Workout (workout_gym_motivationと同等)",
+        "light_flicker": True, "flicker_speed": 2.0, "flicker_amp": 0.05,
+        "camera_shake": True, "shake_px": 4,
+        "description": "標準Workout: ズーム + 照明揺らぎ + 軽い揺れ",
     },
     "sleep": {
         "category": "sleep", "zoom_start": 1.00, "zoom_end": 1.06,
         "pan_px_per_sec": 0.025, "brightness": -0.18, "contrast": 0.95,
         "saturation": 0.80, "vignette": True, "blur": 0.6, "rain": False,
-        "description": "標準Sleep (sleep_softと同等)",
+        "light_flicker": True, "flicker_speed": 0.3, "flicker_amp": 0.02,
+        "camera_shake": False, "shake_px": 0,
+        "description": "標準Sleep: 遅いズーム + 微細な揺らぎ",
     },
     "study": {
         "category": "study", "zoom_start": 1.00, "zoom_end": 1.12,
         "pan_px_per_sec": 0.10, "brightness": -0.05, "contrast": 1.00,
         "saturation": 0.95, "vignette": True, "blur": 0.0, "rain": False,
-        "description": "ゆっくりズーム + 落ち着いた集中感",
+        "light_flicker": True, "flicker_speed": 1.1, "flicker_amp": 0.035,
+        "camera_shake": False, "shake_px": 0,
+        "description": "標準Study: ゆっくりズーム + ランプ揺らぎ",
     },
     "nature": {
         "category": "nature", "zoom_start": 1.00, "zoom_end": 1.15,
         "pan_px_per_sec": 0.20, "brightness": -0.02, "contrast": 1.00,
-        "saturation": 1.05, "vignette": True, "blur": 0.0, "rain": False,
-        "description": "霧・雨・川の流れ感 + ゆっくりズーム",
+        "saturation": 1.05, "vignette": True, "blur": 0.5, "rain": False,
+        "light_flicker": True, "flicker_speed": 0.7, "flicker_amp": 0.03,
+        "camera_shake": False, "shake_px": 0,
+        "description": "標準Nature: 霧ぼかし + 木漏れ日揺らぎ [rain: 改良予定]",
     },
     "cafe": {
         "category": "cafe", "zoom_start": 1.00, "zoom_end": 1.10,
         "pan_px_per_sec": 0.15, "brightness": 0.02, "contrast": 1.00,
         "saturation": 1.08, "vignette": True, "blur": 0.0, "rain": False,
-        "description": "暖色の光 + ゆっくりズーム",
+        "light_flicker": True, "flicker_speed": 0.6, "flicker_amp": 0.03,
+        "camera_shake": False, "shake_px": 0,
+        "description": "標準Cafe: 暖色ライト揺らぎ + ゆっくりズーム",
     },
     "relax": {
         "category": "relax", "zoom_start": 1.00, "zoom_end": 1.10,
         "pan_px_per_sec": 0.10, "brightness": 0.00, "contrast": 1.00,
         "saturation": 1.00, "vignette": True, "blur": 0.0, "rain": False,
-        "description": "夕方の光 + ゆっくりズーム",
+        "light_flicker": True, "flicker_speed": 0.5, "flicker_amp": 0.025,
+        "camera_shake": False, "shake_px": 0,
+        "description": "標準Relax: 夕方の光揺らぎ + ゆっくりズーム",
     },
 }
 
@@ -261,7 +378,9 @@ def loop_audio(audio_path: str, target_sec: float, out_path: str) -> str:
     print(f"[INFO] 音源 {dur:.0f}秒 → {target_sec:.0f}秒にループ中...")
     subprocess.run(
         ["ffmpeg", "-y", "-stream_loop", "-1", "-i", audio_path,
-         "-t", str(target_sec), "-c", "copy", out_path],
+         "-t", str(target_sec),
+         "-c:a", "aac", "-b:a", "192k", "-ar", "44100",  # MP3入力 → AAC出力に変換
+         out_path],
         check=True, capture_output=True,
     )
     print(f"[INFO] ループ完了: {out_path}")
@@ -269,17 +388,23 @@ def loop_audio(audio_path: str, target_sec: float, out_path: str) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────
-#  フィルタ生成  (scale → crop → scale → eq → blur → rain → vignette)
+#  フィルタ生成
+#  scale → crop(Ken Burns) → scale → eq
+#    → [blur] → [rain] → [light_flicker] → [camera_shake]
+#    → vignette → format=yuv420p
 # ─────────────────────────────────────────────────────────────────
 
 def build_vf(preset: dict, duration: int, w=OUT_W, h=OUT_H) -> str:
     """
-    Ken Burns 効果: scale(up) → time-varying crop → scale(out_size)
-    ズームイン: t=0 でズーム1x（全体表示）、t=duration で zoom_end x（中央拡大）
+    Ken Burns: scale(up) → time-varying crop → scale(out_size)
 
-    crop_w(t) = w × (zoom_end − zoom_range × min(t,D)/D)
-      t=0  → crop_w = w × zoom_end  (全体)
-      t=D  → crop_w = w × zoom_start (= w for start=1.0、中央部分)
+    [light_flicker] geq で全チャンネルに sin 波の輝度乗数を掛ける
+      factor(T) = 1 + amp * sin(T*spd) * sin(T*spd*1.73)
+      2つの異なる周波数のサインの積 → 不規則に見える自然な揺らぎ
+
+    [camera_shake] shake_px ピクセル分だけクロップを小さくし
+      2つの非整数倍の sin 波でオフセットを作る
+      → ロール感なしの有機的な位置ゆらぎ
     """
     z_end  = preset["zoom_end"]
     z_rng  = z_end - preset["zoom_start"]   # zoom_range
@@ -309,30 +434,67 @@ def build_vf(preset: dict, duration: int, w=OUT_W, h=OUT_H) -> str:
         f":saturation={preset['saturation']:.2f}"
     )
 
+    # light_flicker が有効な場合 → eval=frame の eq で brightness を動的化
+    # light_flicker が無効な場合 → 静的 eq_f を使用（高速）
+    use_dynamic_eq = preset.get("light_flicker", False)
+
     chain = [
-        f"scale={sw}:{sh}",   # 事前アップスケール
-        crop_f,               # 時間変化クロップ（Ken Burns）
-        f"scale={w}:{h}",     # 出力サイズに戻す
-        eq_f,                 # 色補正
+        f"scale={sw}:{sh}",              # 事前アップスケール
+        crop_f,                           # 時間変化クロップ（Ken Burns）
+        f"scale={w}:{h}",                 # 出力サイズに戻す
     ]
+    if not use_dynamic_eq:
+        chain.append(eq_f)                # 静的色補正（flickerなし）
 
     # ── ソフトフォーカス（sleep系）──
     blur = preset.get("blur", 0.0)
     if blur > 0:
         chain.append(f"gblur=sigma={blur:.1f}")
 
-    # ── 雨筋オーバーレイ（sleep_rainy_night）──
-    # 斜め雨筋: 青みがかった細い縦線が斜めに流れる
-    # floor(X/14)*53 で14px幅ごとにランダムな位相を持つ独立した雨筋
+    # ── 雨筋オーバーレイ ─────────────────────────────────────────
+    # 斜め雨筋: geq lum に lt()*加算 で実装（ffmpeg 8系で if() は非対応）
+    # lum チャンネルを一定パターンで増加 → 明るい細い斜め線 = 雨筋
+    # speed=480px/sec、stripe幅=1.4px/58px周期
     if preset.get("rain"):
+        # ※ geq は T（大文字）、crop/eq は t（小文字）— ffmpeg の仕様
         chain.append(
-            "geq="
-            "r='if(lt(mod(X*0.30+Y+T*480+floor(X/14)*53,58),1.4),min(r+14,255),r)':"
-            "g='if(lt(mod(X*0.30+Y+T*480+floor(X/14)*53,58),1.4),min(g+11,255),g)':"
-            "b='if(lt(mod(X*0.30+Y+T*480+floor(X/14)*53,58),1.4),min(b+26,255),b)'"
+            "geq=lum='lum+20*lt(mod(X*0.30+Y+T*480,58),1.4)'"
+            ":cb='cb':cr='cr'"
         )
 
-    # ── 周辺減光（vignette）──
+    # ── 光の揺らぎ（light_flicker）────────────────────────────
+    # eq filter の eval=frame を使い brightness を時間変化させる
+    # brightness(t) = base + amp * sin(t*spd) * sin(t*spd*1.73)
+    # 2つの異なる周波数のサインの積 → 規則的に見えない自然な揺らぎ
+    if preset.get("light_flicker"):
+        spd  = preset.get("flicker_speed", 1.2)
+        amp  = preset.get("flicker_amp",   0.04)
+        base = preset["brightness"]          # ベースの明るさ
+        spd2 = round(spd * 1.7321, 4)       # 非整数倍で不規則感
+        bright_expr = f"{base:.4f}+{amp:.4f}*sin(t*{spd:.3f})*sin(t*{spd2})"
+        chain.append(
+            f"eq=brightness='{bright_expr}'"
+            f":contrast={preset['contrast']:.2f}"
+            f":saturation={preset['saturation']:.2f}"
+            f":eval=frame"
+        )
+
+    # ── カメラ揺れ（camera_shake）────────────────────────────
+    # shake_px だけクロップを小さくし、2つの sin 波で位置をゆらす
+    # 7.3 と 13.7 Hz（非整数比）→ リサージュ的な不規則軌跡
+    if preset.get("camera_shake") and preset.get("shake_px", 0) > 0:
+        sp  = preset["shake_px"]
+        spx = sp        # 横方向の揺れ幅
+        spy = sp // 2   # 縦方向はやや小さめ
+        # ※ crop フィルタの時間変数は t（小文字）  geq は T（大文字）
+        chain.append(
+            f"crop=w={w - spx*2}:h={h - spy*2}"
+            f":x='{spx}+{spx}*sin(t*7.3)*sin(t*13.7)'"
+            f":y='{spy}+{spy}*sin(t*11.1)*sin(t*17.3)'"
+        )
+        chain.append(f"scale={w}:{h}")
+
+    # ── 周辺減光（vignette）────────────────────────────────
     if preset.get("vignette"):
         chain.append("vignette=angle=PI/4:mode=backward")
 

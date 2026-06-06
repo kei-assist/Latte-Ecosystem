@@ -1,4 +1,4 @@
-# Latte BGM Remake Workflow v2
+# Latte BGM Remake Workflow v3
 
 参照元: `Kei_Life_OS_v2.md`
 更新日: 2026-06-06
@@ -9,55 +9,59 @@
 
 ```
 1. ChatGPTで作った画像を指定フォルダに置く
-   → assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png
+   → assets/latte_bgm/images/source/[カテゴリ]/[ファイル名].png
 
 2. Sunoで作った音源を指定フォルダに置く
-   → assets/latte_bgm/audio/source/workout_boxercise_001.mp3
+   → assets/latte_bgm/audio/source/[ファイル名].mp3
 
-3. コマンドを実行してMP4を作る（下記「Workout動画の作り方」参照）
+3. コマンドを実行してMP4を作る（下記参照）
 ```
 
 ---
 
 ## これは何のためのドキュメントか
 
-ChatGPT（アーク）が生成した高品質画像と Suno の音源を使って、
+ChatGPT（アーク）で生成した高品質画像と Suno の音源を使って、
 Latte BGM の動画を「静止画っぽい動画」から「YouTubeで見ても違和感のない BGM 動画」に作り直す手順書です。
 
-**今できること**: 画像と音源を所定フォルダに入れて1コマンドを実行 → 60分動画が生成される
+**すべての動画に必ず動きを入れること（静止画のみ禁止）**
+
+- ゆっくりズーム（Ken Burns 効果）
+- 横ドリフト（pan）
+- 光の揺らぎ（light_flicker）
+- カメラ揺れ（camera_shake）— Workout 系
 
 ---
 
-## 全体の流れ
+## 動作確認済みプリセット一覧
 
+```bash
+python3 make_video_from_image.py --list-presets
 ```
-1. ChatGPTで画像を生成
-        ↓
-2. 画像を所定フォルダへ保存
-        ↓
-3. Sunoで音源を生成
-        ↓
-4. 音源を所定フォルダへ保存
-        ↓
-5. スクリプト1コマンドで動画生成（15〜20分）
-        ↓
-6. drafts/ で確認 → OKなら final/ へ移動
-        ↓
-7. YouTubeアップロード
-        ↓
-8. 既存動画を差し替え or 新規公開
-```
+
+| preset | カテゴリ | 演出 |
+|--------|---------|------|
+| `workout_beast_mode` | Workout | ズーム + **照明パルス** + **カメラ揺れ** |
+| `workout_boxercise` | Workout | ズーム + 横移動 + **照明揺らぎ** + **カメラ揺れ** |
+| `workout_running` | Workout | 前進感横ドリフト + **朝の光揺らぎ** |
+| `workout_hiit_circuit` | Workout | ズーム + **光点滅** + **カメラ揺れ** |
+| `workout_gym_motivation` | Workout | ゆっくりズーム + **静かな照明揺らぎ** |
+| `sleep_soft` | Sleep | 遅いズーム + **月明かり揺らぎ** + ソフトフォーカス |
+| `sleep_rainy_night` | Sleep | ゆっくりズーム + 霧ぼかし + **窓明かり揺らぎ** ※1 |
+| `sleep_deep_night` | Sleep | 最小ズーム + 霧ぼかし（刺激ゼロ） |
+| `nature_forest_rain` | Nature | ズーム + 横移動 + 霧ぼかし + **木漏れ日揺らぎ** ※1 |
+| `study_focus` | Study | ゆっくりズーム + **ランプ揺らぎ** |
+| `cafe_warm` | Cafe | ゆっくりズーム + **暖色ライト揺らぎ** |
+
+※1 rain overlay（雨粒エフェクト）は後で改良予定。現在は霧ぼかしで代替。
 
 ---
 
 ## 事前チェック（dry-run）
 
-**実際に動画を生成する前に、ファイルが正しい場所にあるか確認できます。**
-
 ```bash
 cd scripts/latte_bgm
 
-# dry-run: ファイル確認 + 設定表示のみ（動画は生成しない）
 python3 make_video_from_image.py \
   --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
   --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
@@ -68,39 +72,19 @@ python3 make_video_from_image.py \
   --dry-run
 ```
 
-**ファイルがない場合の表示:**
-```
-  ❌  画像が見つかりません
-      置く場所: assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png
-      フォルダ : assets/latte_bgm/images/source/workout/
-```
-
-**ファイルが揃った場合の表示:**
-```
-  ✅  画像: ...workout_boxercise_female_001.png  (3100 KB)
-  ✅  音源: ...workout_boxercise_001.mp3  (180秒)
-  ✅  準備完了！以下のコマンドで動画を生成できます
-```
+`✅ 準備完了！` が出たら `--dry-run` を外して実行。
 
 ---
 
 ## パイプライン動作テスト（test-render）
 
-**初めて使う前に、10秒のテスト動画を作ってffmpegが正常に動くか確認できます。**
-
 ```bash
-# 10秒テスト動画を生成（/tmp/ に保存）
 python3 make_video_from_image.py \
   --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
   --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
   --preset workout_boxercise \
-  --test-render
-
-# 生成後は自動で open コマンドが表示されます
-# → open /tmp/latte_bgm_test_workout_boxercise_10sec.mp4
+  --test-render --test-sec 10
 ```
-
-映像・音声が正常なら、60分版の生成に進めます。
 
 ---
 
@@ -110,121 +94,71 @@ python3 make_video_from_image.py \
 
 ```
 assets/latte_bgm/images/source/
-├── workout/    ← Workout 系の画像をここへ
-├── sleep/      ← Sleep 系の画像をここへ
+├── workout/    ← Workout 系の画像
+├── sleep/      ← Sleep 系の画像
 ├── study/
 ├── nature/
 ├── cafe/
 └── relax/
 ```
 
-**命名規則**: `カテゴリ_テーマ_性別_番号.png`
-```
-workout_boxercise_female_001.png
-workout_beast_mode_male_001.png
-sleep_rainy_night_001.png         ← 人物なしの場合は性別省略
-sleep_deep_night_no_person_001.png
-```
+命名規則: `カテゴリ_テーマ_性別_番号.png`
 
 ### 音源
 
 ```
 assets/latte_bgm/audio/source/
-└── ここにMP3を置く（命名規則: カテゴリ_テーマ_番号.mp3）
-
-例:
-  workout_boxercise_001.mp3
-  sleep_rainy_night_001.mp3
+└── カテゴリ_テーマ_番号.mp3
 ```
 
 ---
 
 ## Workout 動画の作り方
 
-### Step 1: スクリプトのディレクトリに移動
-
 ```bash
 cd scripts/latte_bgm
-```
 
-### Step 2: Preset を選ぶ
-
-| 作りたい動画 | preset |
-|-----------|--------|
-| 重い筋トレ・男性 | `workout_beast_mode` |
-| ボクシング・女性 | `workout_boxercise` ← 最初のテスト推奨 |
-| ランニング・朝焼け | `workout_running` |
-| HIIT・サーキット | `workout_hiit_circuit` |
-| ジム前の集中 | `workout_gym_motivation` |
-
-### Step 3: コマンド実行
-
-```bash
-# Boxercise 動画（60分）
+# Boxercise（60分）
 python3 make_video_from_image.py \
-  --image ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
-  --audio ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
+  --image  ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
+  --audio  ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
   --preset workout_boxercise \
   --duration 3600 \
   --title "1 Hour Boxercise Workout Music 2026 | Female Fitness Motivation BGM | Latte BGM" \
   --output ../../assets/latte_bgm/videos/drafts/workout_boxercise_60min_001.mp4
 ```
 
-### Step 4: 出力確認
-
-```
-assets/latte_bgm/videos/drafts/workout_boxercise_60min_001.mp4
-```
-
-冒頭・中間・末尾を再生して確認。OKなら `videos/final/` に移動。
-
 ---
 
 ## Sleep 動画の作り方
 
-### Step 1: Preset を選ぶ
-
-| 作りたい動画 | preset |
-|-----------|--------|
-| 穏やかな睡眠BGM | `sleep_soft` |
-| 雨の夜・窓・青系 | `sleep_rainy_night` ← 最初のテスト推奨 |
-| 深夜・超暗め・寝落ち用 | `sleep_deep_night` |
-
-### Step 2: コマンド実行
-
 ```bash
-# Sleep / Rainy Night（60分）
+# Rainy Night（60分）
 python3 make_video_from_image.py \
-  --image ../../assets/latte_bgm/images/source/sleep/sleep_rainy_night_001.png \
-  --audio ../../assets/latte_bgm/audio/source/sleep_rainy_night_001.mp3 \
+  --image  ../../assets/latte_bgm/images/source/sleep/sleep_rainy_night_001.png \
+  --audio  ../../assets/latte_bgm/audio/source/sleep_rainy_night_001.mp3 \
   --preset sleep_rainy_night \
   --duration 3600 \
   --title "1 Hour Sleep Music 2026 | Rainy Night BGM for Deep Sleep | Latte BGM" \
   --output ../../assets/latte_bgm/videos/drafts/sleep_rainy_night_60min_001.mp4
 ```
 
-> **注意**: `sleep_rainy_night` は雨筋エフェクト (geq) を使用するため、
-> 他プリセットより生成時間が長くなる場合があります（+5分程度）。
-
 ---
 
-## preset の選び方
+## まず60秒テスト動画で確認する
 
 ```bash
-# 一覧を表示
-python3 make_video_from_image.py --list-presets
+# 60秒テスト（--encode-speed fast で高速生成）
+python3 make_video_from_image.py \
+  --image  [画像パス] \
+  --audio  [音源パス] \
+  --preset [プリセット名] \
+  --duration 60 \
+  --output ../../assets/latte_bgm/videos/drafts/TEST_60sec.mp4 \
+  --encode-speed fast
 ```
 
-```
-workout_beast_mode     強めのズーム + 高コントラスト + 力強い印象
-workout_boxercise      やや強めのズーム + 軽い横移動 + ジム照明感
-workout_running        前進感のある横移動 + 朝焼けの明るさ + 疾走感
-workout_hiit_circuit   テンポ感のあるズーム + 高強度感
-workout_gym_motivation ゆっくりズーム + 落ち着いた集中感 + 派手すぎない
-sleep_soft             非常に遅いズーム + 低刺激 + ソフトフォーカス
-sleep_rainy_night      雨筋エフェクト + ゆっくりズーム + 暗め + 青系
-sleep_deep_night       動きは最小限 + 暗め + 霧ぼかし感 + 寝落ち用
-```
+確認OKなら `--duration 3600` に変えて本番生成。
 
 ---
 
@@ -232,113 +166,53 @@ sleep_deep_night       動きは最小限 + 暗め + 霧ぼかし感 + 寝落ち
 
 ```
 assets/latte_bgm/videos/
-├── drafts/    ← 生成直後の確認用（ここで確認）
-└── final/     ← YouTubeアップロード確定版（ここからYTへ）
+├── drafts/    ← 生成直後・確認用（ここで確認）
+└── final/     ← YouTube アップロード確定版
 ```
 
 ---
 
 ## YouTubeにアップする前に確認すること
 
-- [ ] 冒頭5秒が自然に始まっているか（唐突な音量変化がないか）
-- [ ] ループのつなぎ目（音源が短い場合）が不自然でないか
-- [ ] ズームエフェクトがゆっくり自然に動いているか（急すぎないか）
-- [ ] 暗すぎ/明るすぎていないか（SleepはOKでも他はNG）
-- [ ] 動画の長さが正確に60分（または設定した時間）か
-- [ ] メタデータ（`metadata/titles/`）のタイトルを確認したか
+- [ ] 冒頭5秒が自然に始まっているか
+- [ ] ループのつなぎ目が不自然でないか
+- [ ] ズームと光の揺らぎが自然に見えるか
+- [ ] `metadata/titles/` のタイトルを確認したか
 
 ---
 
-## サムネとして使う場合の注意点
+## TODO: rain overlay の改良
 
-- 動画の画像（`images/source/`）をそのままサムネに使う場合、PNG → JPG に変換する
-- YouTube サムネは最大 2MB、1280×720 以上を推奨
-- テキストをオーバーレイする場合は `images/thumbnails/` に保存
-- サムネにEP番号は入れない（Latte BGM の方針）
+`sleep_rainy_night` と `nature_forest_rain` では現在、
+雨粒エフェクト（rain overlay）の代わりに**霧ぼかし（mist）**を使用しています。
 
-```bash
-# PNG → JPG 変換（macOS/Linux）
-convert workout_boxercise_female_001.png \
-  -quality 95 \
-  ../../assets/latte_bgm/images/thumbnails/workout/workout_boxercise_female_001.jpg
-```
+将来の改良候補：
+- 雨ループ動画素材のオーバーレイ（ffmpeg `-filter_complex` を使用）
+- `geq` フィルタの代替実装（ffmpeg バージョン依存の問題を解決後）
 
 ---
 
-## シェルスクリプト版（Python なしで使う場合）
+## シェルスクリプト版
 
 ```bash
 chmod +x make_video_from_image_ffmpeg.sh
 
-# Workout / Boxercise
 ./make_video_from_image_ffmpeg.sh \
   ../../assets/latte_bgm/images/source/workout/workout_boxercise_female_001.png \
   ../../assets/latte_bgm/audio/source/workout_boxercise_001.mp3 \
   workout_boxercise
-
-# Sleep / Rainy Night
-./make_video_from_image_ffmpeg.sh \
-  ../../assets/latte_bgm/images/source/sleep/sleep_rainy_night_001.png \
-  ../../assets/latte_bgm/audio/source/sleep_rainy_night_001.mp3 \
-  sleep_rainy_night
 ```
-
----
-
-## バッチ生成（複数本まとめて）
-
-```bash
-# CSV（batch_config.csv）を作成:
-# image,audio,category,duration,output,title
-# workout_boxercise_female_001.png,workout_boxercise_001.mp3,workout,3600,,1 Hour Boxercise...
-# sleep_rainy_night_001.png,sleep_rainy_night_001.mp3,sleep,3600,,1 Hour Sleep...
-
-python3 batch_make_videos.py batch_config.csv --dry-run  # 確認
-python3 batch_make_videos.py batch_config.csv             # 実行
-```
-
----
-
-## エラーが出たとき
-
-### 「画像ファイルが見つかりません」
-→ `assets/latte_bgm/images/source/[カテゴリ]/` に画像ファイルを置いてください
-
-### 「音源ファイルが見つかりません」
-→ `assets/latte_bgm/audio/source/` に音源ファイルを置いてください
-
-### 「FFmpeg 失敗」
-→ ffmpeg がインストールされているか確認: `which ffmpeg`
-→ インストール: `brew install ffmpeg`
 
 ---
 
 ## Codex へ引き継ぐときの注意点
 
 ```
-1. フォルダ構成を変えない
-   assets/latte_bgm/images/source/[カテゴリ]/[命名規則].png
-   assets/latte_bgm/audio/source/[命名規則].mp3
-
-2. 命名規則を変えない
-   カテゴリ_テーマ_性別_番号.png
-
-3. PRESETS 辞書を維持しながら拡張する（既存を削除しない）
-
-4. build_vf() 関数の引数仕様を維持する
-   build_vf(preset: dict, duration: int) → str
-
-5. batch_make_videos.py の CSV カラム仕様を維持する
-   image, audio, category, duration, output, title
-
-6. メタデータは assets/latte_bgm/metadata/ に統一する
-
+1. PRESETS 辞書を拡張（既存を削除しない）
+2. build_vf() の引数仕様を維持 — build_vf(preset, duration)
+3. 新エフェクト: light_flicker(eq eval=frame) / camera_shake(crop sin波)
+4. geq フィルタで T（大文字）、crop/eq では t（小文字）
+5. rain=False のままコミット — 雨筋実装は別タスクで対応
+6. assets/latte_bgm/ のフォルダ構成・命名規則を変えない
 7. 音源・動画・画像は Git に入れない（.gitignore 対応済み）
-   scripts/ と docs/ と assets/metadata/ だけ Git 管理
-
-8. 自動化候補（Codex実装予定）:
-   - ChatGPT API で画像生成 → source/ へ自動保存
-   - batch_make_videos.py を Cron/定期実行
-   - YouTube Data API で自動アップロード
-   - metadata/ から説明文・タグを自動生成
 ```
