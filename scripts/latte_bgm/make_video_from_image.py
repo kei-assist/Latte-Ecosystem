@@ -90,6 +90,24 @@ PRESETS: dict[str, dict] = {
         "shake_px":       4,
         "description":    "やや強めのズーム + 横移動 + 照明揺らぎ + 軽いカメラ揺れ",
     },
+    "workout_boxercise_long": {
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.16,   # 30秒版(1.22)より控えめ
+        "pan_px_per_sec": 0.38,   # 横移動を抑える
+        "brightness":     0.03,   # わずかに明るさ下げ（長時間疲れにくく）
+        "contrast":       1.08,
+        "saturation":     1.10,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,
+        "flicker_speed":  1.6,    # 点滅を遅く（長尺向け）
+        "flicker_amp":    0.038,  # 揺らぎ強度を抑える
+        "camera_shake":   True,
+        "shake_px":       3,      # 揺れを小さく（30秒版は4px）
+        "description":    "Boxercise 長尺版: 控えめズーム + 抑えた横移動 + ジム照明揺らぎ（長時間視聴向け）",
+    },
     "workout_running": {
         "category":       "workout",
         "zoom_start":     1.00,
@@ -108,6 +126,62 @@ PRESETS: dict[str, dict] = {
         "shake_px":       0,
         "description":    "前進感の横ドリフト + 朝の光揺らぎ + 疾走感",
     },
+    # ── Running 3バリアント（白飛び対策・光揺らぎ調整済み）────────────
+    "running_morning": {
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.12,   # 控えめズーム（構図を保つ）
+        "pan_px_per_sec": 0.30,   # ゆっくり前進感
+        "brightness":    -0.02,   # 白飛び防止・朝の透明感
+        "contrast":       1.04,
+        "saturation":     1.08,   # わずかに暖色
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # やわらかい朝の陽射し
+        "flicker_speed":  0.6,    # ゆっくり
+        "flicker_amp":    0.025,  # 非常に弱め
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "朝焼け都市ラン: ソフトズーム + 爽やか横パン + やわらかい朝の光（白飛び対策）",
+    },
+    "running_chill": {
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.10,   # 最小限ズーム
+        "pan_px_per_sec": 0.18,   # 穏やか
+        "brightness":    -0.04,   # やや暗め・クール感
+        "contrast":       1.02,
+        "saturation":     0.92,   # 彩度控えめ・チル感
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,   # 水面・木漏れ日の反射
+        "flicker_speed":  0.4,    # 非常にゆっくり
+        "flicker_amp":    0.018,  # 最小限
+        "camera_shake":   False,
+        "shake_px":       0,
+        "description":    "海辺・川沿いラン: 極ゆっくりズーム + 穏やか横パン + 水面反射感",
+    },
+    "running_energetic": {
+        "category":       "workout",
+        "zoom_start":     1.00,
+        "zoom_end":       1.15,   # 適度なズーム
+        "pan_px_per_sec": 0.50,   # テンポ感のある前進パン
+        "brightness":     0.01,   # ほぼフラット（白飛びしない範囲）
+        "contrast":       1.08,
+        "saturation":     1.12,
+        "vignette":       True,
+        "blur":           0.0,
+        "rain":           False,
+        "light_flicker":  True,
+        "flicker_speed":  1.0,    # 適度な光の動き
+        "flicker_amp":    0.030,  # 中程度
+        "camera_shake":   False,  # 激しさを出さず映像は安定
+        "shake_px":       0,
+        "description":    "疾走感の都市ラン: 前進ズーム + テンポ感横パン + 爽やか光（激しすぎない）",
+    },
+
     "workout_hiit_circuit": {
         "category":       "workout",
         "zoom_start":     1.00,
