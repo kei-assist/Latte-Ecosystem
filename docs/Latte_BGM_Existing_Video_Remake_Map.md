@@ -28,7 +28,7 @@
 |---|---------------|-------------|--------------|--------------|--------|------|
 | 1 | boxercise | 1 Hour Boxercise Workout Music 2026 \| Female Fitness Motivation BGM \| Latte BGM | workout_boxercise_female_001.png | workout_boxercise_60min_001.mp4 | `workout_boxercise` | ⬜ |
 | 2 | beast_mode | 1 Hour Beast Mode Gym Music \| Male Powerlifting Motivation BGM \| Latte BGM | workout_beast_mode_male_001.png | workout_beast_mode_60min_001.mp4 | `workout_beast_mode` | ⬜ |
-| 3 | running | 1 Hour Running Music 2026 \| Female Morning Run Cardio BGM \| Latte BGM | workout_running_female_001.png | workout_running_60min_001.mp4 | `workout_running` | ⬜ |
+| 3 | running | 1 Hour Workout Music 2026 \| Run Faster Vol.1 \| Running & Cardio BGM | workout_running_female_001.png | workout_running_60min_001.mp4 | `workout_running` | ⬜ 音源待ち |
 | 4 | hiit_circuit | 1 Hour HIIT Circuit Training Music \| High Intensity Workout BGM \| Latte BGM | workout_hiit_circuit_female_001.png | workout_hiit_circuit_60min_001.mp4 | `workout_hiit_circuit` | ⬜ |
 | 5 | gym_motivation | 1 Hour Gym Motivation Music \| Pre-Workout Focus BGM \| Latte BGM | workout_gym_motivation_male_001.png | workout_gym_motivation_60min_001.mp4 | `workout_gym_motivation` | ⬜ |
 
@@ -86,7 +86,7 @@
 
 - [ ] `workout_boxercise_female_001.png` → `assets/latte_bgm/images/source/workout/`
 - [ ] `workout_beast_mode_male_001.png`
-- [ ] `workout_running_female_001.png`
+- [x] `workout_running_female_001.png` ✅ 配置済み
 - [ ] `workout_hiit_circuit_female_001.png`
 - [ ] `workout_gym_motivation_male_001.png`
 - [ ] `sleep_rainy_night_001.png` → `assets/latte_bgm/images/source/sleep/`
@@ -98,7 +98,7 @@
 
 - [ ] `workout_boxercise_001.mp3` → `assets/latte_bgm/audio/source/`
 - [ ] `workout_beast_mode_001.mp3`
-- [ ] `workout_running_001.mp3`
+- [ ] `workout_running_001.mp3` ← **Run Faster Vol.1 リメイクに必要（未配置）**
 - [ ] `workout_hiit_circuit_001.mp3`
 - [ ] `workout_gym_motivation_001.mp3`
 - [ ] `sleep_rainy_night_001.mp3`
